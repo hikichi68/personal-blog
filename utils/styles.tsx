@@ -1,0 +1,1 @@
+export const commonTextStyle = "font-size-2 font-bold tracking-widest";

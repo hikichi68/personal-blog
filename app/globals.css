@@ -1,0 +1,18 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ======================================= */
+/* 💡 Dify Chatbot Custom Styles */
+/* ======================================= */
+#dify-chatbot-bubble-button {
+    background-color: #BE123C !important; /* サイトのテーマカラー(赤)に合わせました */
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06) !important;
+    z-index: 9999 !important; /* 最前面に表示 */
+  }
+  
+  #dify-chatbot-bubble-window {
+    width: 24rem !important;
+    height: 40rem !important;
+    z-index: 9999 !important; /* ウィンドウも最前面に */
+  }

@@ -2,16 +2,15 @@ import type { Metadata } from "next";
 import { Header } from '@/components/Header'; 
 import { Footer } from '@/components/Footer';
 import { LeftSidebar } from '@/components/LeftSidebar'; 
-import RightSidebar from '@/components/RightSidebar'; // import { RightSidebar } から修正済み
+import RightSidebar from '@/components/RightSidebar'; 
 import Script from 'next/script';
 import { GoogleAnalytics } from '@/components/GoogleAnalytics';
-import { DifyCustomChat } from '@/components/DifyChatbot';
 import { SpeedInsights } from "@vercel/speed-insights/next"
 
 import "./globals.css";
 import '@fortawesome/fontawesome-svg-core/styles.css';
 
-const BASE_URL = 'https://bar-royal-chord.vercel.app';
+const BASE_URL = 'https://barhik.tokyo/';
 const GA_TRACKING_ID = 'G-3NSB7W1M61';
 
 export const metadata: Metadata = {
@@ -74,8 +73,6 @@ export default function RootLayout({
 				{/*  google analytics */}
 				{/* ======================================================= */}
 				<GoogleAnalytics trackingId={GA_TRACKING_ID} />
-
-				<DifyCustomChat />
 			</body>
 		</html>
 	)

@@ -53,8 +53,6 @@ export default async function Home() {
                         </Link>
                     </div>
                 </div>
-                
-                {/* 💡 修正: フッターテキストは削除し、簡潔なCTAを配置 */}
             </main>
         </div>
     );

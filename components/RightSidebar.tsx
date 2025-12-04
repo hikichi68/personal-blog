@@ -2,7 +2,6 @@
 
 import React from 'react';
 import { usePathname } from 'next/navigation';
-import MenuSidebar from './MenuSidebar'; 
 import { BlogSidebar } from './BlogSidebar'; // 💡 修正後のClient Componentをインポート
 
 // プレースホルダー（メニュー・ブログ以外のページ用）
@@ -29,10 +28,6 @@ export default function RightSidebar({ className }: RightSidebarProps) {
 
     // 💡 修正: Sidebarコンポーネント自体を直接返すように変更 (DefaultSidebar以外はタイトル込み)
     const renderContent = () => {
-        if (pathname.startsWith('/menu')) {
-            // MenuSidebarがタイトルと内容の両方を含む (MenuSidebar.tsxで修正済み)
-            return <MenuSidebar />;
-        }
         if (pathname.startsWith('/blog')) {
             // 💡 BlogSidebarがClient Component化されたため、ここで呼び出しても問題なくなりました
             return <BlogSidebar />;

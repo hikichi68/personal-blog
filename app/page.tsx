@@ -39,7 +39,7 @@ export default async function Home() {
 
                     <div className="flex justify-center space-x-4">
                         <Link 
-                            href="" 
+                            href="/blog" 
                             className="px-6 py-3 bg-red-600 text-white font-semibold rounded-full shadow-lg hover:bg-red-700 transition duration-300"
                         >
                             全メニューを見る

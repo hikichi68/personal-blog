@@ -1,11 +1,5 @@
 'use client'; 
 import React, { Children, cloneElement, isValidElement, ReactNode, ReactElement, useState } from 'react';
-import { Metadata } from 'next';
-
-//export const metadata: Metadata = {
-//    title: "About",
-//    description: "Royal Chordの店舗情報とコンセプトについてのページです。",
-//}
 
 // =================================================================
 // 1. StackProps の型定義 (省略なし)

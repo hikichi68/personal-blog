@@ -11,11 +11,9 @@ interface LeftSidebarProps {
 }
 
 const categories = [
-    { name: 'Menu', href: '/menu', key: 'menu' },
     { name: 'About', href: '/about', key: 'about' },
     { name: 'Access', href: '/access', key: 'access' }, 
     { name: 'Private', href: '/private', key: 'private' }, 
-    { name: 'Gallery', href: '/gallery', key: 'gallery' },
     { name: 'Blog', href: '/blog', key: 'blog' }, 
 ];
 

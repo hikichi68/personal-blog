@@ -3,7 +3,6 @@ import React from 'react';
 interface HeroProps {
     title: string;
     subtitle: string;
-    // 💡 修正: ビジュアルをONにするプロパティはそのまま残します
     imageOn?: boolean; 
 }
 

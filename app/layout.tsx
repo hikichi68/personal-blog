@@ -3,9 +3,7 @@ import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { LeftSidebar } from '@/components/LeftSidebar'; 
 import RightSidebar from '@/components/RightSidebar'; 
-import Script from 'next/script';
 import { GoogleAnalytics } from '@/components/GoogleAnalytics';
-import { SpeedInsights } from "@vercel/speed-insights/next"
 
 import "./globals.css";
 import '@fortawesome/fontawesome-svg-core/styles.css';

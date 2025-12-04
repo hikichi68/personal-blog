@@ -1,5 +1,4 @@
 import Link from 'next/link';
-import Image from 'next/image';
 import Hero from '@/components/Hero'; // 修正されたHeroをインポート
 // 💡 修正: おすすめメニューのデータ取得はトップページでは不要なため削除
 // import { getRecommendedItems } from './data/menu'; 
@@ -40,7 +39,7 @@ export default async function Home() {
 
                     <div className="flex justify-center space-x-4">
                         <Link 
-                            href="/menu" 
+                            href="" 
                             className="px-6 py-3 bg-red-600 text-white font-semibold rounded-full shadow-lg hover:bg-red-700 transition duration-300"
                         >
                             全メニューを見る

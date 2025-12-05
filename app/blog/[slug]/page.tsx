@@ -19,6 +19,7 @@ export async function generateStaticParams() {
 
 // generateMetadata は変更なし
 export async function generateMetadata({ params }: PostPageProps): Promise<Metadata> {
+    const resolvedParams = await params;
     const post = await getPostBySlug(params.slug);
 
     if (!post) {
@@ -36,6 +37,7 @@ export async function generateMetadata({ params }: PostPageProps): Promise<Metad
 
 // 💡 投稿詳細ページのメインコンポーネント (変更なし)
 export default async function PostPage({ params }: PostPageProps) {
+    const resolvedParams = await params;
     const post: PostDetail | null = await getPostBySlug(params.slug);
 
     if (!post) {

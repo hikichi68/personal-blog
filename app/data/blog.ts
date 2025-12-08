@@ -8,33 +8,75 @@ if (!GQL_ENDPOINT) {
 }
 
 // ===============================================
-// 💡 【追加】カテゴリ別記事一覧の戻り値の型定義
+// 型定義
 // ===============================================
+
+// 記事内のACFフィールドの型定義
+export interface AcfFields {
+  // --- グローバルフィールド ---
+  seoMetaTitle?: string;       // JSONにはないが、通常SEO系で必要になるため枠を用意
+  seoMetaDescription?: string; // 同上
+  articleLeadContent?: string; // リード文
+  displayTocFlag?: boolean;    // 目次表示フラグ
+  affBannerUrl?: string;       // JSON: aff_banner_url
+  affBannerImage?: {           // JSON: aff_banner_image
+    node: {
+      sourceUrl: string;
+      altText: string;
+    };
+  } | null;
+  cardExcerpt?: string;        // JSON: card_excerpt
+  experienceLevel?: string;    // JSON: experience_level (radio button return value)
+
+  // --- 収益特化フィールド (商品1) ---
+  product1Name?: string;             // JSON: product_1_name
+  product1AffLinkUrl?: string;       // JSON: product_1_aff_link_url
+  product1CatchCopy?: string;        // JSON: product_1_catch_copy
+  product1RecommendRating?: number;  // JSON: product1RecommendRating (camelCase in JSON definition)
+
+  // --- 収益特化フィールド (商品2) ---
+  product2Name?: string;
+  product2AffLinkUrl?: string;
+  product2CatchCopy?: string;
+  product2RecommendRating?: number;
+
+  // --- 収益特化フィールド (商品3) ---
+  product3Name?: string;
+  product3AffLinkUrl?: string;
+  product3CatchCopy?: string;
+  product3RecommendRating?: number;
+
+  // --- 知識・作法特化フィールド ---
+  proOnePoint?: string;        // JSON: proOnePoint
+  alcoholProof?: string;       // JSON: alcohol_proof
+  recipeIngredients?: string;  // JSON: recipeIngredients
+  originHistory?: string;      // JSON: originHistory
+}
+
 export interface CategoryPostsData {
     categoryName: string;
     posts: PostListItem[];
 }
 
-// サイドバー用: カテゴリの型定義 (変更なし)
 export interface Category {
   name: string;
   slug: string;
-  count: number; // 記事数
+  count: number;
 }
 
-// サイドバー用: 最新記事の型定義 (変更なし)
 export interface RecentPost {
   title: string;
   slug: string;
 }
 
-// 投稿詳細用の型定義 (変更なし)
+// 投稿詳細用の型定義 (ACFを追加)
 export interface PostDetail {
   databaseId: number;
   slug: string;
   title: string;
   date: string;
-  content: string; // 本文 (HTMLコンテンツ)
+  content: string;
+  excerpt: string; // リード文の代わりやメタデータとして使用
   author: {
     node: {
       name: string;
@@ -46,16 +88,40 @@ export interface PostDetail {
       altText: string;
     };
   } | null;
-  // カテゴリー情報 (サイドバーなどで利用可能)
   categories: {
     nodes: {
       name: string;
       slug: string;
     }[];
   };
+  // ACFデータの追加 (WPGraphQLの構成により、トップレベルまたはacfフィールド下に入ります)
+  // ここでは一般的な構成として、トップレベルのフィールドとしてマージされるか、
+  // あるいは `acf` というオブジェクトにまとまるかを確認する必要があります。
+  // 今回のクエリではトップレベル（Post直下）に展開される想定で記述しつつ、
+  // クエリ側で `acf` フィールドグループとして取得する場合はここを修正します。
+  // ※ここではクエリに合わせてフラットに定義します。
+  
+  // 実際のデータ構造に合わせてマッピングするためのインターフェース
+  blogGlobalFields?: { // フィールドグループ名に基づくプロパティ
+     affBannerUrl: string;
+     // ...他
+  };
+  // 簡略化のため、クエリの返り値を直接扱う構造にします
+  aff_banner_url?: string;
+  card_excerpt?: string;
+  experience_level?: string;
+  proOnePoint?: string;
+  recipeIngredients?: string;
+  originHistory?: string;
+  alcohol_proof?: string;
+  // 商品系
+  product_1_name?: string;
+  product_1_aff_link_url?: string;
+  product1RecommendRating?: number;
+  // ...他
 }
 
-// 投稿一覧の型定義 (変更なし)
+// 投稿一覧の型定義
 export interface PostListItem {
   databaseId: number;
   slug: string;
@@ -73,12 +139,14 @@ export interface PostListItem {
       altText: string;
     };
   } | null;
+  // 一覧表示でも使いたいACFがあればここに追加（例: 難易度など）
+  experience_level?: string;
 }
 
 // ===============================================
-// 💡 【修正】カテゴリのスラッグを指定して記事一覧を取得するクエリ
-// ⚠️ 変数 $slug の型を [String!] に修正しました。
+// GraphQL クエリ
 // ===============================================
+
 const GET_POSTS_BY_CATEGORY_SLUG_QUERY = `
 query GetPostsByCategorySlug($slugs: [String!]) {
   categories(where: {slug: $slugs}) {
@@ -109,7 +177,6 @@ query GetPostsByCategorySlug($slugs: [String!]) {
 }
 `;
 
-// 💡 その他既存のクエリ
 const GET_ALL_POSTS_QUERY = `
 query GetAllPosts {
   posts(first: 10) {
@@ -135,6 +202,11 @@ query GetAllPosts {
 }
 `;
 
+// 💡 重要: ACFフィールドを取得するためにクエリを拡張
+// 注意: フィールド名はWPGraphQLの設定やプラグインのバージョンにより
+// camelCase (affBannerUrl) か snake_case (aff_banner_url) か異なります。
+// ここではJSONの "graphql_field_name" に基づき記述しますが、
+// エラーが出る場合は WordPress管理画面の GraphiQL IDE で正しいフィールド名を確認してください。
 const GET_POST_BY_SLUG_QUERY = `
 query GetPostBySlug($slug: ID!) {
   post(id: $slug, idType: SLUG) {
@@ -143,6 +215,7 @@ query GetPostBySlug($slug: ID!) {
     title
     date
     content(format: RENDERED)
+    excerpt(format: RENDERED)
     author {
       node {
         name
@@ -160,6 +233,35 @@ query GetPostBySlug($slug: ID!) {
         slug
       }
     }
+    
+    # --- ACF Global Fields ---
+    aff_banner_url
+    card_excerpt
+    experience_level
+    
+    # --- ACF Revenue Fields (Product 1) ---
+    product_1_name
+    product_1_aff_link_url
+    product_1_catch_copy
+    product1RecommendRating
+    
+    # --- ACF Revenue Fields (Product 2) ---
+    product_2_name
+    product_2_aff_link_url
+    product_2_catch_copy
+    product_2_recommend_rating
+    
+    # --- ACF Revenue Fields (Product 3) ---
+    product_3_name
+    product_3_aff_link_url
+    product_3_catch_copy
+    product_3_recommend_rating
+
+    # --- ACF Knowledge Fields ---
+    proOnePoint
+    alcohol_proof
+    recipeIngredients
+    originHistory
   }
 }
 `;
@@ -197,11 +299,6 @@ query GetAllCategories {
 }
 `;
 
-// ===============================================
-// 💡 【追加】カテゴリ別記事一覧を取得するためのGraphQLクエリ
-// 記事の絞り込みには where: { categoryName: "..." } を使用します。
-// $slug 変数にはカテゴリのスラッグを渡します。
-// ===============================================
 const GET_POSTS_BY_CATEGORY_QUERY = `
 query GetPostsByCategory($slug: String!) {
   posts(first: 10, where: {categoryName: $slug}) {
@@ -227,10 +324,10 @@ query GetPostsByCategory($slug: String!) {
 }
 `;
 
+// ===============================================
+// クエリ実行ロジック
+// ===============================================
 
-// ===============================================
-// 💡 クエリ実行ロジック (変更なし)
-// ===============================================
 async function fetchGraphQL<T>(query: string, variables = {}): Promise<T> {
   const response = await fetch(GQL_ENDPOINT!, {
     method: 'POST',
@@ -256,16 +353,12 @@ async function fetchGraphQL<T>(query: string, variables = {}): Promise<T> {
   return result.data as T;
 }
 
-// ===============================================
-// 💡 【追加】カテゴリのスラッグに基づいて記事一覧を取得する関数
-// ===============================================
 export async function getPostsByCategorySlug(categorySlug: string): Promise<PostListItem[]> {
   try {
     const data = await fetchGraphQL<{ posts: { nodes: PostListItem[] } }>(
       GET_POSTS_BY_CATEGORY_QUERY,
-      { slug: categorySlug } // 変数としてカテゴリのスラッグを渡す
+      { slug: categorySlug }
     );
-    // 💡 記事が0件の場合も空の配列が返る
     return data.posts.nodes;
   } catch (error) {
     console.error(`Error fetching posts by category slug: ${categorySlug}`, error);
@@ -273,8 +366,6 @@ export async function getPostsByCategorySlug(categorySlug: string): Promise<Post
   }
 }
 
-
-// 💡 既存の関数 (変更なし)
 export async function getAllPosts(): Promise<PostListItem[]> {
   try {
     const data = await fetchGraphQL<{ posts: { nodes: PostListItem[] } }>(
@@ -335,4 +426,3 @@ export async function getAllCategories(): Promise<Category[]> {
         return [];
     }
 }
-

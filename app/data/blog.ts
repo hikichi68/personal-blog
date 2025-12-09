@@ -104,33 +104,35 @@ export interface PostDetail {
   // ※ここではクエリに合わせてフラットに定義します。
   
   // 実際のデータ構造に合わせてマッピングするためのインターフェース
-  blogGlobalFields?: { // フィールドグループ名に基づくプロパティ
-     affBannerUrl: string;
-     // ...他
-  };
-  // 簡略化のため、クエリの返り値を直接扱う構造にします
-  aff_banner_url?: string;
-  card_excerpt?: string;
-  experience_level?: string;
-  proOnePoint?: string;
-  recipeIngredients?: string;
-  originHistory?: string;
-  alcohol_proof?: string;
-  // 商品系
-  product_1_name?: string;
-  product_1_aff_link_url?: string;
-  product_1_catch_copy?: string;
-  product1RecommendRating?: number; 
-  
-  product_2_name?: string;
-  product_2_aff_link_url?: string;
-  product_2_catch_copy?: string;
-  product_2_recommend_rating?: number;
+  globalFields?: { // ACFのGraphQL Field Nameに合わせる
+    aff_banner_url?: string;
+    card_excerpt?: string;
+    experience_level?: string;
+ };
+ 
+ revenueReviewFields?: { // ACFのGraphQL Field Nameに合わせる
+   product_1_name?: string;
+   product_1_aff_link_url?: string;
+   product_1_catch_copy?: string;
+   product1RecommendRating?: number;
+   
+   product_2_name?: string;
+   product_2_aff_link_url?: string;
+   product_2_catch_copy?: string;
+   product_2_recommend_rating?: number;
 
-  product_3_name?: string; //
-  product_3_aff_link_url?: string;
-  product_3_catch_copy?: string;
-  product_3_recommend_rating?: number;
+   product_3_name?: string;
+   product_3_aff_link_url?: string;
+   product_3_catch_copy?: string;
+   product_3_recommend_rating?: number;
+ };
+ 
+ knowledgeMannersFields?: { // ACFのGraphQL Field Nameに合わせる
+   proOnePoint?: string;
+   recipeIngredients?: string;
+   originHistory?: string;
+   alcohol_proof?: string;
+ };
 }
 
 // 投稿一覧の型定義
@@ -247,33 +249,42 @@ query GetPostBySlug($slug: ID!) {
     }
     
     # --- ACF Global Fields ---
-    aff_banner_url
-    card_excerpt
-    experience_level
+    globalFields {
+      aff_banner_url
+      card_excerpt
+      experience_level
+    }
     
-    # --- ACF Revenue Fields (Product 1) ---
-    product_1_name
-    product_1_aff_link_url
-    product_1_catch_copy
-    product1RecommendRating
     
-    # --- ACF Revenue Fields (Product 2) ---
-    product_2_name
-    product_2_aff_link_url
-    product_2_catch_copy
-    product_2_recommend_rating
-    
-    # --- ACF Revenue Fields (Product 3) ---
-    product_3_name
-    product_3_aff_link_url
-    product_3_catch_copy
-    product_3_recommend_rating
+    # --- ACF Revenue Fields ---
+    revenueReviewFields {
+
+      # --- ACF Revenue Fields (Product 1) ---
+      product_1_name
+      product_1_aff_link_url
+      product_1_catch_copy
+      product1RecommendRating
+      
+      # --- ACF Revenue Fields (Product 2) ---
+      product_2_name
+      product_2_aff_link_url
+      product_2_catch_copy
+      product_2_recommend_rating
+      
+      # --- ACF Revenue Fields (Product 3) ---
+      product_3_name
+      product_3_aff_link_url
+      product_3_catch_copy
+      product_3_recommend_rating
+    }
 
     # --- ACF Knowledge Fields ---
-    proOnePoint
-    alcohol_proof
-    recipeIngredients
-    originHistory
+    knowledgeMannersFields {
+      proOnePoint
+      alcohol_proof
+      recipeIngredients
+      originHistory
+    }
   }
 }
 `;

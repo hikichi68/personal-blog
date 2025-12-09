@@ -147,14 +147,18 @@ export interface PostListItem {
       name: string;
     };
   };
+  
   featuredImage: {
     node: {
       sourceUrl: string;
       altText: string;
     };
   } | null;
-  // 一覧表示でも使いたいACFがあればここに追加（例: 難易度など）
-  experience_level?: string;
+  
+  globalFields?: {
+    card_excerpt?: string;
+    experience_level?: string;
+  };
 }
 
 // ===============================================
@@ -193,7 +197,7 @@ query GetPostsByCategorySlug($slugs: [String!]) {
 
 const GET_ALL_POSTS_QUERY = `
 query GetAllPosts {
-  posts(first: 10) {
+  posts(first: 1000) {
     nodes {
       databaseId
       slug
@@ -205,11 +209,17 @@ query GetAllPosts {
           name
         }
       }
+
       featuredImage {
         node {
           sourceUrl
           altText
         }
+      }
+        
+      globalFields {
+        card_excerpt
+        experience_level
       }
     }
   }

@@ -76,7 +76,7 @@ export interface PostDetail {
   title: string;
   date: string;
   content: string;
-  excerpt: string; // リード文の代わりやメタデータとして使用
+  excerpt: string;
   author: {
     node: {
       name: string;
@@ -94,6 +94,8 @@ export interface PostDetail {
       slug: string;
     }[];
   };
+
+  
   // ACFデータの追加 (WPGraphQLの構成により、トップレベルまたはacfフィールド下に入ります)
   // ここでは一般的な構成として、トップレベルのフィールドとしてマージされるか、
   // あるいは `acf` というオブジェクトにまとまるかを確認する必要があります。
@@ -117,8 +119,18 @@ export interface PostDetail {
   // 商品系
   product_1_name?: string;
   product_1_aff_link_url?: string;
-  product1RecommendRating?: number;
-  // ...他
+  product_1_catch_copy?: string;
+  product1RecommendRating?: number; 
+  
+  product_2_name?: string;
+  product_2_aff_link_url?: string;
+  product_2_catch_copy?: string;
+  product_2_recommend_rating?: number;
+
+  product_3_name?: string; //
+  product_3_aff_link_url?: string;
+  product_3_catch_copy?: string;
+  product_3_recommend_rating?: number;
 }
 
 // 投稿一覧の型定義

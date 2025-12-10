@@ -9,9 +9,9 @@ import Link from 'next/link';
 
 // 💡 動的ルーティングのパラメータの型定義
 interface CategoryPageProps {
-    params: {
+    params: Promise<{
         slug: string; // カテゴリのスラッグ (例: "wine", "event")
-    };
+    }>;
 }
 
 /**
@@ -38,12 +38,14 @@ async function getCategoryData(slug: string): Promise<Category | undefined> {
  * カテゴリ名を使って、ページごとのメタデータ (タイトル、ディスクリプション) を動的に設定します。
  */
 export async function generateMetadata({ params }: CategoryPageProps): Promise<Metadata> {
-    const category = await getCategoryData(params.slug);
+    
+    const { slug } = await params;    
+    const category = await getCategoryData(slug);
 
     if (!category) {
         // カテゴリが見つからなくても、記事が存在しない可能性もあるため、ここではデフォルトのタイトルを返す
         return {
-            title: `カテゴリ: ${params.slug} | Blog`,
+            title: `カテゴリ: ${slug} | Blog`,
         };
     }
 
@@ -56,7 +58,8 @@ export async function generateMetadata({ params }: CategoryPageProps): Promise<M
 
 // 💡 カテゴリ別記事一覧ページのメインコンポーネント
 export default async function CategoryPage({ params }: CategoryPageProps) {
-    const categorySlug = params.slug;
+    const { slug } = await params;
+    const categorySlug = slug;
     
     // 1. カテゴリ別記事データを取得
     const posts: PostListItem[] = await getPostsByCategorySlug(categorySlug);

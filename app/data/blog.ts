@@ -164,37 +164,6 @@ export interface PostListItem {
 // ===============================================
 // GraphQL クエリ
 // ===============================================
-
-const GET_POSTS_BY_CATEGORY_SLUG_QUERY = `
-query GetPostsByCategorySlug($slugs: [String!]) {
-  categories(where: {slug: $slugs}) {
-    nodes {
-      name
-      posts {
-        nodes {
-          databaseId
-          slug
-          title
-          date
-          excerpt(format: RENDERED)
-          author {
-            node {
-              name
-            }
-          }
-          featuredImage {
-            node {
-              sourceUrl
-              altText
-            }
-          }
-        }
-      }
-    }
-  }
-}
-`;
-
 const GET_ALL_POSTS_QUERY = `
 query GetAllPosts {
   posts(first: 1000) {
@@ -346,11 +315,17 @@ query GetPostsByCategory($slug: String!) {
           name
         }
       }
+
       featuredImage {
         node {
           sourceUrl
           altText
         }
+      }
+        
+      globalFields {
+        card_excerpt
+        experience_level
       }
     }
   }

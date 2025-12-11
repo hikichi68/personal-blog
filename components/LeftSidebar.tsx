@@ -10,21 +10,26 @@ interface LeftSidebarProps {
     className?: string;
 }
 
-const categories = [
-    { name: 'About', href: '/about', key: 'about' },
-    { name: 'Access', href: '/access', key: 'access' }, 
-    { name: 'Private', href: '/private', key: 'private' }, 
-    { name: 'Blog', href: '/blog', key: 'blog' }, 
+const navigationItems = [
+    { name: 'Home', href: '/', key: 'home' },
+    { name: 'Blog', href: '/blog', key: 'blog' },
+    { name: 'Profile', href: '/profile', key: 'profile' },
+    { name: 'Contact', href: '/contact', key: 'contact' },
 ];
 
-// 💡 Propsを受け取るように修正
 export function LeftSidebar({ onClickLink, className }: LeftSidebarProps) { 
     const pathname = usePathname(); 
     
     const isActive = (href: string) => {
+ 
         if (href === '/') {
-            return false;
+            return pathname === '/';
         }
+
+        if (href === '/blog') {
+            return pathname.startsWith('/blog');
+        }
+
         return pathname.startsWith(href);
     };
 
@@ -39,25 +44,23 @@ export function LeftSidebar({ onClickLink, className }: LeftSidebarProps) {
                 </button>
             </div>
             
-            {/* 💡 修正 2: 既存の Navigation 見出しをモバイルでは非表示に切り替える */}
             <h2 className="text-xl font-bold mb-4 border-b border-gray-700 pb-2 hidden lg:block">Navigation</h2>
             <nav>
                 <ul className="space-y-2">
-                    {categories.map((category) => (
-                        <li key={category.key}>
+                    {navigationItems.map((item) => (
+                        <li key={item.key}>
                             <Link 
-                                href={category.href}
-                                // 💡 リンククリック時にドロワーを閉じる関数を実行
+                                href={item.href}
                                 onClick={onClickLink}
                                 className={`
                                     block py-2 px-3 rounded transition duration-150
-                                    ${isActive(category.href) 
+                                    ${isActive(item.href) 
                                         ? 'bg-red-600 font-bold' 
                                         : 'hover:bg-gray-700' 
                                     }
                                 `}
                             >
-                                {category.name}
+                                {item.name}
                             </Link>
                         </li>
                     ))}

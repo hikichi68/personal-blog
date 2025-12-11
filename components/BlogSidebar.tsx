@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-// 💡 データフェッチャー関数と型をインポート
+import { usePathname } from 'next/navigation';
 import { getRecentPosts, getAllCategories, RecentPost, Category } from '@/app/data/blog';
 
 // 💡 ローディング状態を表現するためのスケルトンコンポーネント
@@ -56,7 +56,9 @@ export const BlogSidebar: React.FC = () => {
         };
 
         fetchData();
-    }, []); // 最初のレンダリング時のみ実行
+    }, []); 
+
+    const pathname = usePathname();
 
     if (isLoading) {
         return <LoadingSkeleton />;
@@ -74,6 +76,10 @@ export const BlogSidebar: React.FC = () => {
     const posts = recentPosts || [];
     const cats = categories || [];
 
+    const isCategoryActive = (slug: string) => {
+        return pathname === `/blog/category/${slug}`;
+    };
+  
     return (
         <div className="space-y-10">
             {/* 1. 最新記事セクション */}
@@ -108,9 +114,13 @@ export const BlogSidebar: React.FC = () => {
                         {cats.map((category) => (
                             <Link 
                                 key={category.slug}
-                                // 💡 カテゴリページへのリンク
                                 href={`/blog/category/${category.slug}`}
-                                className="inline-block bg-gray-200 text-gray-800 text-sm font-medium px-3 py-1 rounded-full hover:bg-red-700 hover:text-white transition duration-150"
+                                className={`inline-block text-sm font-medium px-3 py-1 rounded-full transition duration-150 
+                                    ${isCategoryActive(category.slug) 
+                                        ? 'bg-red-700 text-white shadow-md' // アクティブ時のスタイル
+                                        : 'bg-gray-200 text-gray-800 hover:bg-red-500 hover:text-white' // 非アクティブ時のスタイル
+                                    }
+                                `}
                             >
                                 #{category.name} ({category.count})
                             </Link>

@@ -1,6 +1,5 @@
 import Link from 'next/link';
 import Hero from '@/components/Hero'; 
-// 💡 修正: トップページで最新記事を取得し、カード形式で表示するためインポート
 import { getAllPosts, PostListItem } from './data/blog';
 import { BlogPostCard } from '@/components/BlogPostCard';
 
@@ -14,8 +13,8 @@ export default async function Home() {
         <div className="min-h-screen bg-gray-50">
             {/* 1. ヒーローセクション */}
             <Hero
-                title="Royal Chord Blog" // 💡 タイトルに「Blog」を追加
-                subtitle="カクテルの知識、お酒の作法、プロが教えるバーの世界" // 💡 ブログのコンセプトに変更
+                title="The Bartenders Memoir"
+                subtitle="カクテルの知識、お酒の作法、プロが教えるバーの世界"
                 imageOn
             />
 

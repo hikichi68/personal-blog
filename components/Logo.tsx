@@ -20,7 +20,7 @@ export function Logo({ className = '',boxOn = false}: LogoProps) {
         <Link href="/"
         className={`${baseStyle} ${dynamicStyle} ${className}`}
         >
-            Royal Chord
+            The Bartender's Memoir
         </Link>
     )
 }

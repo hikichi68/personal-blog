@@ -1,6 +1,5 @@
 import { DATE_FORMAT_JP_FULL } from '@/utils/date-formats';
 
-// 環境変数からGraphQLのエンドポイントを取得
 const GQL_ENDPOINT = process.env.NEXT_PUBLIC_WORDPRESS_API_URL;
 
 if (!GQL_ENDPOINT) {
@@ -67,6 +66,12 @@ export interface Category {
 export interface RecentPost {
   title: string;
   slug: string;
+  date: string;
+  author: {
+    node: {
+      name: string;
+    };
+  };
 }
 
 // 投稿詳細用の型定義 (ACFを追加)
@@ -147,18 +152,32 @@ export interface PostListItem {
       name: string;
     };
   };
-  
   featuredImage: {
     node: {
       sourceUrl: string;
       altText: string;
     };
   } | null;
-  
+  categories: {
+    nodes: {
+      name: string;
+      slug: string;
+    }[];
+  }
   globalFields?: {
     card_excerpt?: string;
     experience_level?: string;
   };
+}
+
+export interface BlogCardItem {
+  id: number;
+  title: string;
+  slug: string;
+  date: string;
+  authorName: string;
+  imageUrl: string; // 確実に文字列としてURLを持つ
+  categoryName: string | null;
 }
 
 // ===============================================
@@ -183,6 +202,13 @@ query GetAllPosts {
         node {
           sourceUrl
           altText
+        }
+      }
+
+      categories {
+        nodes {
+          name
+          slug
         }
       }
         
@@ -284,6 +310,12 @@ query GetRecentPosts {
     nodes {
       title
       slug
+      date
+      author {
+        node {
+          name
+        }
+      }
     }
   }
 }
@@ -320,6 +352,13 @@ query GetPostsByCategory($slug: String!) {
         node {
           sourceUrl
           altText
+        }
+      }
+
+      categories {
+        nodes {
+          name
+          slug
         }
       }
         
@@ -433,4 +472,37 @@ export async function getAllCategories(): Promise<Category[]> {
         console.error("Error fetching all categories:", error);
         return [];
     }
+}
+
+export async function getAllBlogCards(): Promise<BlogCardItem[]> {
+  try {
+    const data = await fetchGraphQL<{ posts: { nodes: PostListItem[] } }>(
+      GET_ALL_POSTS_QUERY
+    );
+    
+    // 💡 ここでデータを整形 (Galleryの成功例と同じアプローチ)
+    return data.posts.nodes.map(post => {
+        // 画像URLの解決ロジック
+        const imgNode = post.featuredImage?.node;
+        const imageUrl = imgNode?.sourceUrl || 'https://placehold.co/600x400/png?text=No+Image';
+        
+        // カテゴリ名の解決ロジック
+        const categoryName = post.categories?.nodes && post.categories.nodes.length > 0
+            ? post.categories.nodes[0].name
+            : null;
+
+        return {
+            id: post.databaseId,
+            title: post.title,
+            slug: post.slug,
+            date: post.date,
+            authorName: post.author.node.name,
+            imageUrl: imageUrl,
+            categoryName: categoryName,
+        };
+    });
+  } catch (error) {
+    console.error("Error fetching all blog cards:", error);
+    return []; 
+  }
 }

@@ -3,7 +3,8 @@
 import React from 'react';
 import { usePathname } from 'next/navigation';
 import { BlogSidebar } from './BlogSidebar';
-import { RandomPostsSidebar } from './RandomPostsSidebar'; // 💡 追加
+import { RandomPostsSidebar } from './RandomPostsSidebar';
+import { PortfolioSidebar } from './PortfolioSidebar';
 
 interface RightSidebarProps {
     className?: string;
@@ -17,8 +18,14 @@ export default function RightSidebar({ className }: RightSidebarProps) {
         if (pathname.startsWith('/blog')) {
             return <BlogSidebar />;
         }
+
+        // 2. プロフィールページ (/profile)
+        // 💡 修正: ProfileSidebar を表示
+        if (pathname === '/profile') {
+            return <PortfolioSidebar />; 
+       }
         
-        // 2. その他（Home /, Contact /contact, Profile /profile など）
+        // 3. その他（Home /, Contact /contact, Profile /profile など）
         // Profile用は後で作るとして、一旦全て RandomPostsSidebar を表示
         return <RandomPostsSidebar />;
     };

@@ -22,7 +22,7 @@ export default async function Home() {
             <main id="blog-introduction" className="container mx-auto p-8 pt-16 max-w-6xl">
                 <div className="bg-white p-10 rounded-xl shadow-2xl border-t-4 border-red-600">
                     <h2 className="text-3xl font-serif font-bold text-gray-800 mb-6 text-center">
-                        <span className="text-red-700">|</span> 知識と作法を深める、バーテンダーの教養ブログ
+                        <span className="text-red-700">|</span> 知識と作法を深める、<br />バーテンダーの教養ブログ
                     </h2>
 
                     <p className="text-lg text-gray-700 leading-relaxed mb-6 text-center">

@@ -2,8 +2,9 @@ import React from 'react';
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import { getPostBySlug, PostDetail, getAllPostSlugs } from '@/app/data/blog'; 
+import { BlogPostCard } from '@/components/BlogPostCard';
 import { BlogPostDate } from '@/components/BlogPostDate';
-import { AffiliateItem } from '@/components/AffiliateItem'; // 新規コンポーネント
+import { AffiliateItem } from '@/components/AffiliateItem';
 import Link from 'next/link';
 
 interface PostPageProps {

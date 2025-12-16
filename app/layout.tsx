@@ -13,10 +13,10 @@ const GA_TRACKING_ID = 'G-3NSB7W1M61';
 
 export const metadata: Metadata = {
 	title: {
-		default:"Royal Chord",
-		template: "%s | Royal Chord",
+		default:"The Bartender's Memoir",
+		template: "%s | The Bartender's Memoir",
 	},
-	description: "東京の高級レストラン、Royal Chordの公式メニューと店舗情報です。",
+	description: "プロのバーテンダーが贈る、カクテル、ウイスキー、バーの作法に関する教養ブログです。",
 	icons: {
 		icon: '/favicon.ico',
 	},
@@ -24,16 +24,16 @@ export const metadata: Metadata = {
 	metadataBase: new URL(BASE_URL),
 	
 	openGraph: {
-		title: "Royal Chord",
-		description: "東京の高級レストラン、Royal Chordの公式メニューと店舗情報です。",
+		title: "The Bartender's Memoir",
+		description: "プロのバーテンダーが贈る、カクテル、ウイスキー、バーの作法に関する教養ブログです。",
 		url: BASE_URL,
-		siteName: "Royal Chord",
+		siteName: "The Bartender's Memoir",
 		images: [
 			{ 
 				url: "/og-image.png",
 				width: 1200,
 				height: 630,
-				alt: "Royal Chord",
+				alt: "The Bartender's Memoir",
 			},
 		],
 		locale: "ja_JP",

@@ -4,7 +4,7 @@ const nextConfig = {
       remotePatterns: [
         {
           protocol: 'https',
-          hostname: 'wp.barhik.tokyo', 
+          hostname: 'blog.barhik.tokyo', 
           port: '',
           pathname: '/**',
         },

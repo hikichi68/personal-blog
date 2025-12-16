@@ -12,52 +12,34 @@ import { sanitizeHtml } from '@/lib/sanitize';
 import { RandomPostsSidebar } from '@/components/RandomPostsSidebar'; // サイドバーもインポート
 
 interface PostPageProps {
-    params: {
+    params: Promise<{
         slug: string;
-    };
+    }>;
 }
 
 export async function generateStaticParams() {
     const slugs = await getAllPostSlugs();
-    // Next.jsのSSG最適化のため、空の配列ではなく、取得したslugsを返します
-    return slugs.map(slug => ({ slug }));
+    return slugs; 
 }
 
-// 💡 メタデータの非同期処理はparamsをawaitする必要はありません
 export async function generateMetadata({ params }: PostPageProps): Promise<Metadata> {
-    const { slug } = params;
+    const { slug } = await params;
     const post = await getPostBySlug(slug);
 
     if (!post) {
         return { title: "記事が見つかりません" };
     }
 
-    // サイト名も統一
     const siteTitle = "The Bartender's Memoir";
 
     return {
-        title: post.title,
+        title: `${post.title} | ${siteTitle}`,
         description: post.excerpt ? post.excerpt.replace(/<[^>]+>/g, '') : `${siteTitle}の記事: ${post.title}`, 
-        openGraph: {
-            title: post.title,
-            description: post.excerpt ? post.excerpt.replace(/<[^>]+>/g, '') : `Royal Chordの記事: ${post.title}`,
-            url: `https://blog.barhik.tokyo/blog/${slug}`, // 💡 本番URLに合わせる
-            siteName: siteTitle,
-            images: [
-                {
-                    url: post.featuredImage?.node.sourceUrl || '/default-ogp.jpg',
-                    width: 1200,
-                    height: 630,
-                    alt: post.title,
-                }
-            ],
-            type: 'article',
-        },
     };
 }
 
 export default async function PostPage({ params }: PostPageProps) {
-    const { slug } = params;
+    const { slug } = await params; // 💡 修正ポイント: paramsをawaitする
     const post: PostDetail | null = await getPostBySlug(slug);
 
     if (!post) {

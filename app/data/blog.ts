@@ -117,17 +117,23 @@ export interface PostDetail {
  
  revenueReviewFields?: { // ACFのGraphQL Field Nameに合わせる
    product_1_name?: string;
+   product_1_image?: { node: { sourceUrl: string } } | null;
    product_1_aff_link_url?: string;
+   product_1_redirect_slug?: string;
    product_1_catch_copy?: string;
    product1RecommendRating?: number;
    
    product_2_name?: string;
+   product_2_image?: { node: { sourceUrl: string } } | null;
    product_2_aff_link_url?: string;
+   product_2_redirect_slug?: string;
    product_2_catch_copy?: string;
    product_2_recommend_rating?: number;
 
    product_3_name?: string;
+   product_3_image?: { node: { sourceUrl: string } } | null;
    product_3_aff_link_url?: string;
+   product_3_redirect_slug?: string;
    product_3_catch_copy?: string;
    product_3_recommend_rating?: number;
  };
@@ -266,19 +272,37 @@ query GetPostBySlug($slug: ID!) {
 
       # --- ACF Revenue Fields (Product 1) ---
       product_1_name
+      product_1_image {
+        node {
+          sourceUrl
+        }
+      }
       product_1_aff_link_url
+      product_1_redirect_slug
       product_1_catch_copy
       product1RecommendRating
       
       # --- ACF Revenue Fields (Product 2) ---
       product_2_name
+          product_2_image {
+        node {
+          sourceUrl
+        }
+      }
       product_2_aff_link_url
+      product_2_redirect_slug
       product_2_catch_copy
       product_2_recommend_rating
       
       # --- ACF Revenue Fields (Product 3) ---
       product_3_name
+      product_3_image {
+        node {
+          sourceUrl
+        }
+      }
       product_3_aff_link_url
+      product_3_redirect_slug
       product_3_catch_copy
       product_3_recommend_rating
     }

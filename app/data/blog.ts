@@ -530,3 +530,37 @@ export async function getAllBlogCards(): Promise<BlogCardItem[]> {
     return []; 
   }
 }
+
+export async function getAffiliateUrlBySlug(slug: string): Promise<string | null> {
+  const query = `
+    query GetAllAffiliateLinks {
+      posts(first: 100) {
+        nodes {
+          revenueReviewFields {
+            product_1_redirect_slug
+            product_1_aff_link_url
+            product_2_redirect_slug
+            product_2_aff_link_url
+            product_3_redirect_slug
+            product_3_aff_link_url
+          }
+        }
+      }
+    }
+  `;
+
+  try {
+    const data = await fetchGraphQL<{ posts: { nodes: any[] } }>(query);
+    
+    for (const post of data.posts.nodes) {
+      const rev = post.revenueReviewFields;
+      if (!rev) continue;
+      if (rev.product_1_redirect_slug === slug) return rev.product_1_aff_link_url;
+      if (rev.product_2_redirect_slug === slug) return rev.product_2_aff_link_url;
+      if (rev.product_3_redirect_slug === slug) return rev.product_3_aff_link_url;
+    }
+    return null;
+  } catch (error) {
+    return null;
+  }
+}

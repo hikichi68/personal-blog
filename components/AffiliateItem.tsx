@@ -5,26 +5,40 @@ import { faStar } from '@fortawesome/free-solid-svg-icons';
 interface AffiliateItemProps {
   name?: string;
   url?: string;
+  redirectSlug?: string;
+  imageUrl?: string;
   catchCopy?: string;
-  rating?: number; // 1-5
-  index: number;   // 商品番号 (1, 2, 3)
+  rating?: number;
+  index: number;
 }
 
 export const AffiliateItem: React.FC<AffiliateItemProps> = ({
   name,
   url,
+  redirectSlug,
+  imageUrl,
   catchCopy,
   rating = 0,
   index,
 }) => {
-  // 名前もURLもない場合は何も表示しない
-  if (!name || !url) return null;
+  if (!name) return null;
+
+  // B案：リダイレクトスラッグがあればそちらを優先、なければ直URLを使う
+  const finalUrl = redirectSlug ? `/go/${redirectSlug}` : url;
+
+  if (!finalUrl) return null;
 
   return (
     <div className="my-8 border-2 border-gray-100 rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow duration-300 bg-white">
+      {/* 商品画像がある場合に表示 */}
+      {imageUrl && (
+        <div className="w-full h-64 overflow-hidden border-b border-gray-100">
+          <img src={imageUrl} alt={name} className="w-full h-full object-cover" />
+        </div>
+      )}
+
       <div className="bg-gray-50 px-4 py-2 border-b border-gray-100 flex justify-between items-center">
         <span className="font-bold text-gray-700">Item 0{index}</span>
-        {/* 星評価の表示 */}
         <div className="flex text-yellow-400 text-sm">
           {[...Array(5)].map((_, i) => (
             <FontAwesomeIcon 
@@ -46,9 +60,7 @@ export const AffiliateItem: React.FC<AffiliateItemProps> = ({
         
         <div className="mt-4 text-center">
           <a 
-            href={url} 
-            target="_blank" 
-            rel="noopener noreferrer"
+            href={finalUrl} // ★ここを内部リンクまたはリダイレクトURLに
             className="inline-block w-full sm:w-auto px-8 py-3 bg-red-700 text-white font-bold rounded-lg hover:bg-red-800 transition duration-300 shadow-md"
           >
             詳細を見る &rarr;

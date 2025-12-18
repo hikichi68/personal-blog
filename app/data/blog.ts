@@ -111,6 +111,7 @@ export interface PostDetail {
   // 実際のデータ構造に合わせてマッピングするためのインターフェース
   globalFields?: { // ACFのGraphQL Field Nameに合わせる
     aff_banner_url?: string;
+    aff_banner_image?: {node: {sourceUrl: string;};} | null;
     card_excerpt?: string;
     experience_level?: string;
  };
@@ -262,6 +263,11 @@ query GetPostBySlug($slug: ID!) {
     # --- ACF Global Fields ---
     globalFields {
       aff_banner_url
+      aff_banner_image {
+        node {
+          sourceUrl
+        }
+      }
       card_excerpt
       experience_level
     }

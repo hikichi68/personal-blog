@@ -179,6 +179,24 @@ export default async function PostPage({ params }: PostPageProps) {
 
             </article>
 
+            {post.globalFields?.aff_banner_image?.node?.sourceUrl && (
+                <div className="mt-16 pt-10 border-t border-gray-100">
+                    <p className="text-center text-xs text-gray-400 mb-4">ADVERTISEMENT</p>
+                    <a 
+                        href={post.globalFields.aff_banner_url || '#'} 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="block overflow-hidden rounded-xl shadow-md hover:shadow-xl transition-shadow duration-300"
+                    >
+                        <img 
+                            src={post.globalFields.aff_banner_image.node.sourceUrl} 
+                            alt="サイト共通バナー" 
+                            className="w-full h-auto object-cover hover:scale-[1.02] transition-transform duration-500"
+                        />
+                    </a>
+                </div>
+            )}
+
             {/* 💡 一覧へ戻るボタン */}
             <div className="mt-10 text-center">
                 <Link 

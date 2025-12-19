@@ -51,7 +51,7 @@ export async function generateMetadata({ params }: CategoryPageProps): Promise<M
 
     return {
         title: `${category.name} の記事一覧 | Blog`,
-        description: `Royal Chordのブログ記事のうち、カテゴリ「${category.name}」の記事一覧ページです。`, 
+        description: `The Bartender's Memoirのブログ記事のうち、カテゴリ「${category.name}」の記事一覧ページです。`, 
     };
 }
 

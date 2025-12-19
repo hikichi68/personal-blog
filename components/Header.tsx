@@ -43,15 +43,16 @@ export function Header({ className }: HeaderProps) {
                     
                     {/* 💡 SNSアイコン群 (PCビュー: md以上で表示) */}
                     <div className="hidden md:flex items-center space-x-5 text-gray-500">
-                        <Link href="https://x.com/YourAccount" target="_blank" rel="noopener" className="hover:text-black transition-colors">
+                        <Link href="https://x.com/hik_bar_memoir" target="_blank" rel="noopener" className="hover:text-black transition-colors">
                             <FontAwesomeIcon icon={faXTwitter} size="lg" />
                         </Link>
-                        <Link href="https://instagram.com/YourAccount" target="_blank" rel="noopener" className="hover:text-pink-600 transition-colors">
+                        <Link href="https://www.instagram.com/hik_bar_memoir/" target="_blank" rel="noopener" className="hover:text-pink-600 transition-colors">
                             <FontAwesomeIcon icon={faInstagram} size="lg" />
                         </Link>
-                        <Link href="https://facebook.com/YourAccount" target="_blank" rel="noopener" className="hover:text-blue-600 transition-colors">
+                        {/*<Link href="https://facebook.com/YourAccount" target="_blank" rel="noopener" className="hover:text-blue-600 transition-colors">
                             <FontAwesomeIcon icon={faFacebook} size="lg" />
                         </Link>
+                        */}
                     </div>
 
                     {/* 💡 縦仕切り線 (PCのみ) */}

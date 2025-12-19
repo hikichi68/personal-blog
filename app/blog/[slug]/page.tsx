@@ -30,24 +30,42 @@ export async function generateMetadata({ params }: PostPageProps): Promise<Metad
     }
 
     const siteTitle = "The Bartender's Memoir";
+    // HTMLタグを除去し、適切な長さに調整した説明文
+    const description = post.excerpt 
+        ? post.excerpt.replace(/<[^>]+>/g, '').slice(0, 120) 
+        : `${siteTitle}の記事: ${post.title}`;
+
+    const pageUrl = `https://blog.barhik.tokyo/blog/${slug}`;
+    const ogImage = post.featuredImage?.node.sourceUrl || '/default-ogp.jpg';
 
     return {
         title: `${post.title} | ${siteTitle}`,
-        description: post.excerpt ? post.excerpt.replace(/<[^>]+>/g, '') : `${siteTitle}の記事: ${post.title}`, 
+        description: description,
+        alternates: {
+            canonical: pageUrl,
+        },
         openGraph: {
             title: post.title,
-            description: post.excerpt ? post.excerpt.replace(/<[^>]+>/g, '') : `Royal Chordの記事: ${post.title}`,
-            url: `https://blog.barhik.tokyo/blog/${slug}`,
+            description: description,
+            url: pageUrl,
             siteName: siteTitle,
             images: [
                 {
-                    url: post.featuredImage?.node.sourceUrl || '/default-ogp.jpg',
+                    url: ogImage,
                     width: 1200,
                     height: 630,
                     alt: post.title,
                 }
             ],
             type: 'article',
+            publishedTime: post.date,
+            authors: [post.author.node.name],
+        },
+        twitter: {
+            card: 'summary_large_image',
+            title: post.title,
+            description: description,
+            images: [ogImage],
         },
     };
 }
@@ -59,10 +77,30 @@ export default async function PostPage({ params }: PostPageProps) {
     if (!post) {
         notFound();
     }
-    
+
+    // 💡 return の前にロジック（JSON-LDの作成など）を書く
+    const jsonLd = {
+        "@context": "https://schema.org",
+        "@type": "BlogPosting",
+        "headline": post.title,
+        "image": post.featuredImage?.node.sourceUrl || 'https://blog.barhik.tokyo/default-ogp.jpg',
+        "datePublished": post.date,
+        "author": [{
+            "@type": "Person",
+            "name": post.author.node.name,
+            "url": "https://blog.barhik.tokyo/profile"
+        }]
+    };
+
+    // 💡 最後に一回だけ return する
     return (
-        <div className="container mx-auto px-4 py-16 max-w-5xl"> 
-            
+        <div className="container mx-auto px-4 py-16 max-w-5xl">
+            {/* 💡 JSON-LDの挿入 */}
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+            />
+
             <article className="bg-white p-6 md:p-10 rounded-lg shadow-2xl">
                 {post.featuredImage && (
                     <div className="mb-8 w-full overflow-hidden rounded-lg shadow-md bg-gray-100">
@@ -101,13 +139,13 @@ export default async function PostPage({ params }: PostPageProps) {
                     </div>
                 )}
                 
-                {/* 💡 本文の表示 (サニタイズ必須) */}
+                {/* 💡 本文の表示 */}
                 <div 
                     className="prose max-w-none text-gray-800 leading-relaxed mb-12" 
                     dangerouslySetInnerHTML={{ __html: sanitizeHtml(post.content) }}
                 />
 
-                {/* 💡 お酒の詳細データ（レシピ・歴史など） */}
+                {/* 💡 お酒の詳細データ */}
                 {(post.knowledgeMannersFields?.recipeIngredients || post.knowledgeMannersFields?.originHistory || post.knowledgeMannersFields?.alcohol_proof) && ( 
                     <div className="my-12 border-t-2 border-gray-100 pt-8">
                         <h3 className="text-2xl font-serif font-bold mb-6 text-gray-900">Data & History</h3>
@@ -138,10 +176,9 @@ export default async function PostPage({ params }: PostPageProps) {
                     </div>
                 )}
 
-                {/* 💡 商品紹介セクション（アフィリエイト・PR表示追加） */}
+                {/* 💡 商品紹介セクション */}
                 {(post.revenueReviewFields?.product_1_name || post.revenueReviewFields?.product_2_name || post.revenueReviewFields?.product_3_name) && (
                     <div className="mt-16 pt-10 border-t border-gray-200">
-                        {/* 💡 [PR]表示を明確に追記 */}
                         <p className="text-center text-sm font-bold text-red-700 mb-2">[PR] 当記事はアフィリエイトプログラムによる広告を含みます。</p>
                         <h2 className="text-3xl font-serif font-bold text-center mb-8">
                             Recommended Items
@@ -176,9 +213,9 @@ export default async function PostPage({ params }: PostPageProps) {
                         />
                     </div>
                 )}
-
             </article>
 
+            {/* 💡 共通バナー */}
             {post.globalFields?.aff_banner_image?.node?.sourceUrl && (
                 <div className="mt-16 pt-10 border-t border-gray-100">
                     <p className="text-center text-xs text-gray-400 mb-4">ADVERTISEMENT</p>
@@ -206,8 +243,6 @@ export default async function PostPage({ params }: PostPageProps) {
                     ブログ記事一覧へ戻る
                 </Link>
             </div>
-            
-            {/* 修正: サイドバーエリア (gridの2カラム目) は削除しました */}
         </div>
     );
 }

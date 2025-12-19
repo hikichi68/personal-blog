@@ -570,3 +570,25 @@ export async function getAffiliateUrlBySlug(slug: string): Promise<string | null
     return null;
   }
 }
+
+export async function searchPosts(searchTerm: string) {
+  const query = `
+    query SearchPosts($searchTerm: String!) {
+      posts(where: { search: $searchTerm }, first: 10) {
+        nodes {
+          title
+          slug
+          date
+          featuredImage {
+            node {
+              sourceUrl
+            }
+          }
+        }
+      }
+    }
+  `;
+
+  const data = await fetchGraphQL<{ posts: { nodes: any[] } }>(query, { searchTerm });
+  return data.posts.nodes;
+}

@@ -1,5 +1,3 @@
-import { DATE_FORMAT_JP_FULL } from '@/utils/date-formats';
-
 const GQL_ENDPOINT = process.env.NEXT_PUBLIC_WORDPRESS_API_URL;
 
 if (!GQL_ENDPOINT) {
@@ -9,48 +7,6 @@ if (!GQL_ENDPOINT) {
 // ===============================================
 // 型定義
 // ===============================================
-
-// 記事内のACFフィールドの型定義
-export interface AcfFields {
-  // --- グローバルフィールド ---
-  seoMetaTitle?: string;       // JSONにはないが、通常SEO系で必要になるため枠を用意
-  seoMetaDescription?: string; // 同上
-  articleLeadContent?: string; // リード文
-  displayTocFlag?: boolean;    // 目次表示フラグ
-  affBannerUrl?: string;       // JSON: aff_banner_url
-  affBannerImage?: {           // JSON: aff_banner_image
-    node: {
-      sourceUrl: string;
-      altText: string;
-    };
-  } | null;
-  cardExcerpt?: string;        // JSON: card_excerpt
-  experienceLevel?: string;    // JSON: experience_level (radio button return value)
-
-  // --- 収益特化フィールド (商品1) ---
-  product1Name?: string;             // JSON: product_1_name
-  product1AffLinkUrl?: string;       // JSON: product_1_aff_link_url
-  product1CatchCopy?: string;        // JSON: product_1_catch_copy
-  product1RecommendRating?: number;  // JSON: product1RecommendRating (camelCase in JSON definition)
-
-  // --- 収益特化フィールド (商品2) ---
-  product2Name?: string;
-  product2AffLinkUrl?: string;
-  product2CatchCopy?: string;
-  product2RecommendRating?: number;
-
-  // --- 収益特化フィールド (商品3) ---
-  product3Name?: string;
-  product3AffLinkUrl?: string;
-  product3CatchCopy?: string;
-  product3RecommendRating?: number;
-
-  // --- 知識・作法特化フィールド ---
-  proOnePoint?: string;        // JSON: proOnePoint
-  alcoholProof?: string;       // JSON: alcohol_proof
-  recipeIngredients?: string;  // JSON: recipeIngredients
-  originHistory?: string;      // JSON: originHistory
-}
 
 export interface CategoryPostsData {
     categoryName: string;

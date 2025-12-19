@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import { Logo } from './Logo';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBars, faTimes, faSearch } from '@fortawesome/free-solid-svg-icons';
-import { faXTwitter, faInstagram, faFacebook } from '@fortawesome/free-brands-svg-icons'; // Facebook追加
+import { faXTwitter, faInstagram } from '@fortawesome/free-brands-svg-icons';
 import { LeftSidebar } from './LeftSidebar'; 
 
 interface HeaderProps {
@@ -49,10 +49,6 @@ export function Header({ className }: HeaderProps) {
                         <Link href="https://www.instagram.com/hik_bar_memoir/" target="_blank" rel="noopener" className="hover:text-pink-600 transition-colors">
                             <FontAwesomeIcon icon={faInstagram} size="lg" />
                         </Link>
-                        {/*<Link href="https://facebook.com/YourAccount" target="_blank" rel="noopener" className="hover:text-blue-600 transition-colors">
-                            <FontAwesomeIcon icon={faFacebook} size="lg" />
-                        </Link>
-                        */}
                     </div>
 
                     {/* 💡 縦仕切り線 (PCのみ) */}
@@ -105,9 +101,8 @@ export function Header({ className }: HeaderProps) {
                     
                     {/* モバイル用SNSリンク */}
                     <div className="flex justify-center space-x-8 mb-10 text-white text-2xl">
-                        <Link href="#" onClick={handleCloseMenu}><FontAwesomeIcon icon={faXTwitter} /></Link>
-                        <Link href="#" onClick={handleCloseMenu}><FontAwesomeIcon icon={faInstagram} /></Link>
-                        <Link href="#" onClick={handleCloseMenu}><FontAwesomeIcon icon={faFacebook} /></Link>
+                        <Link href="https://x.com/hik_bar_memoir" target="_blank" rel="noopener" onClick={handleCloseMenu}><FontAwesomeIcon icon={faXTwitter} /></Link>
+                        <Link href="https://www.instagram.com/hik_bar_memoir/" target="_blank" rel="noopener" onClick={handleCloseMenu}><FontAwesomeIcon icon={faInstagram} /></Link>
                     </div>
 
                     <LeftSidebar onClickLink={handleCloseMenu} className="shadow-none" />

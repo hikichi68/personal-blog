@@ -27,7 +27,7 @@ export default async function Home() {
 
                     <p className="text-lg text-gray-700 leading-relaxed mb-6 text-center">
                         このブログは、元バーテンダーが、お酒をより深く楽しむための知識や、
-                        知っておきたいバーでのスマートな作法を共有する場です。
+                        知っておきたいバーでのスマートな作法を共有する場です。<br />
                         カクテルレシピ、ウイスキーの基礎知識、プロの視点など、
                         あなたの「一杯」をさらに豊かにするための情報を発信しています。
                     </p>
@@ -40,7 +40,7 @@ export default async function Home() {
                             ブログ記事一覧へ &rarr;
                         </Link>
                         <Link 
-                            href="/profile" // 💡 Profileへの導線も追加
+                            href="/profile"
                             className="px-6 py-3 border border-gray-400 text-gray-800 font-semibold rounded-full shadow-md hover:bg-gray-100 transition duration-300"
                         >
                             バーテンダーのプロフィール

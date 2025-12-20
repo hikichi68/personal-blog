@@ -153,7 +153,7 @@ export default async function PostPage({ params }: PostPageProps) {
                 
                 {/* 本文 */}
                 <div 
-                    className="prose max-w-none text-gray-800 leading-relaxed mb-12" 
+                    className="blog-content max-w-none text-gray-800 leading-relaxed mb-12" 
                     dangerouslySetInnerHTML={{ __html: sanitizedContent }}
                 />
 

@@ -1,1 +1,27 @@
 @import "tailwindcss";
+
+/* 記事本文内の見出しスタイル */
+.blog-content h2 {
+    font-size: 1.8rem;
+    font-weight: bold;
+    border-left: 4px solid #b91c1c; /* バーの赤色に合わせるアクセント */
+    padding-left: 1rem;
+    margin-top: 2.5rem;
+    margin-bottom: 1.5rem;
+    line-height: 1.4;
+  }
+  
+  .blog-content h3 {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid #e5e7eb;
+    padding-bottom: 0.5rem;
+  }
+  
+  /* ついでに段落やリストも整えると綺麗です */
+  .blog-content p {
+    margin-bottom: 1.25rem;
+    line-height: 1.8;
+  }

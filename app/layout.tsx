@@ -6,7 +6,10 @@ import RightSidebar from '../components/RightSidebar';
 import { GoogleAnalytics } from '../components/GoogleAnalytics';
 
 import "./globals.css";
+import { config } from '@fortawesome/fontawesome-svg-core'
 import '@fortawesome/fontawesome-svg-core/styles.css';
+config.autoAddCss = false
+
 
 const BASE_URL = 'https://barhik.tokyo/';
 const GA_TRACKING_ID = 'G-3NSB7W1M61';

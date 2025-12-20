@@ -6,9 +6,7 @@ import { BlogPostDate } from '@/components/BlogPostDate';
 import { AffiliateItem } from '@/components/AffiliateItem';
 import Link from 'next/link';
 
-// 💡 必須追加: サニタイズヘルパーをインポート
-import { sanitizeHtml } from '@/lib/sanitize'; 
-// 修正: RandomPostsSidebar のインポートを削除しました
+import { sanitizeHtml } from '@/lib/sanitize.server'; 
 
 interface PostPageProps {
     params: Promise<{
@@ -21,7 +19,9 @@ export async function generateStaticParams() {
     return slugs; 
 }
 
-export async function generateMetadata({ params }: PostPageProps): Promise<Metadata> {
+export async function generateMetadata(
+    { params }: PostPageProps
+): Promise<Metadata> {
     const { slug } = await params;
     const post = await getPostBySlug(slug);
 
@@ -30,7 +30,6 @@ export async function generateMetadata({ params }: PostPageProps): Promise<Metad
     }
 
     const siteTitle = "The Bartender's Memoir";
-    // HTMLタグを除去し、適切な長さに調整した説明文
     const description = post.excerpt 
         ? post.excerpt.replace(/<[^>]+>/g, '').slice(0, 120) 
         : `${siteTitle}の記事: ${post.title}`;
@@ -40,13 +39,13 @@ export async function generateMetadata({ params }: PostPageProps): Promise<Metad
 
     return {
         title: `${post.title} | ${siteTitle}`,
-        description: description,
+        description,
         alternates: {
             canonical: pageUrl,
         },
         openGraph: {
             title: post.title,
-            description: description,
+            description,
             url: pageUrl,
             siteName: siteTitle,
             images: [
@@ -64,7 +63,7 @@ export async function generateMetadata({ params }: PostPageProps): Promise<Metad
         twitter: {
             card: 'summary_large_image',
             title: post.title,
-            description: description,
+            description,
             images: [ogImage],
         },
     };
@@ -78,7 +77,21 @@ export default async function PostPage({ params }: PostPageProps) {
         notFound();
     }
 
-    // 💡 return の前にロジック（JSON-LDの作成など）を書く
+    /* ===============================
+       sanitize は JSX の前で await
+       =============================== */
+
+    const sanitizedContent = await sanitizeHtml(post.content);
+
+    const sanitizedProOnePoint =
+        post.knowledgeMannersFields?.proOnePoint
+            ? await sanitizeHtml(post.knowledgeMannersFields.proOnePoint)
+            : null;
+
+    /* ===============================
+       JSON-LD
+       =============================== */
+
     const jsonLd = {
         "@context": "https://schema.org",
         "@type": "BlogPosting",
@@ -92,10 +105,9 @@ export default async function PostPage({ params }: PostPageProps) {
         }]
     };
 
-    // 💡 最後に一回だけ return する
     return (
         <div className="container mx-auto px-4 py-16 max-w-5xl">
-            {/* 💡 JSON-LDの挿入 */}
+            {/* JSON-LD */}
             <script
                 type="application/ld+json"
                 dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
@@ -114,45 +126,51 @@ export default async function PostPage({ params }: PostPageProps) {
                     </div>
                 )}
                 
-                {/* 💡 タイトル */}
+                {/* タイトル */}
                 <h1 className="text-3xl md:text-5xl font-serif font-extrabold text-gray-900 mb-6 border-b-4 border-red-700 pb-4">
                     {post.title}
                 </h1>
                 
-                {/* 💡 メタ情報 */}
+                {/* メタ情報 */}
                 <div className="flex flex-wrap items-center gap-4 mb-10 text-gray-600 bg-gray-50 p-3 rounded">
                     <BlogPostDate dateString={post.date} />
                     <span className="hidden md:inline">|</span>
                     <span className="text-sm">著者: {post.author.node.name}</span>
                 </div>
 
-                {/* 💡 プロのワンポイント */}
-                {post.knowledgeMannersFields?.proOnePoint && ( 
+                {/* プロのワンポイント */}
+                {sanitizedProOnePoint && ( 
                     <div className="mb-10 p-6 bg-slate-100 border-l-4 border-slate-500 rounded-r-lg">
                         <h3 className="text-xl font-bold mb-3 text-slate-800 flex items-center">
-                            <span className="text-2xl mr-2">💡</span> Bartender's Note
+                            <span className="text-2xl mr-2">💡</span> Bartender&apos;s Note
                         </h3>
                         <div 
                             className="prose prose-slate max-w-none"
-                            dangerouslySetInnerHTML={{ __html: sanitizeHtml(post.knowledgeMannersFields.proOnePoint) }}
+                            dangerouslySetInnerHTML={{ __html: sanitizedProOnePoint }}
                         />
                     </div>
                 )}
                 
-                {/* 💡 本文の表示 */}
+                {/* 本文 */}
                 <div 
                     className="prose max-w-none text-gray-800 leading-relaxed mb-12" 
-                    dangerouslySetInnerHTML={{ __html: sanitizeHtml(post.content) }}
+                    dangerouslySetInnerHTML={{ __html: sanitizedContent }}
                 />
 
-                {/* 💡 お酒の詳細データ */}
-                {(post.knowledgeMannersFields?.recipeIngredients || post.knowledgeMannersFields?.originHistory || post.knowledgeMannersFields?.alcohol_proof) && ( 
+                {/* Data & History */}
+                {(post.knowledgeMannersFields?.recipeIngredients ||
+                  post.knowledgeMannersFields?.originHistory ||
+                  post.knowledgeMannersFields?.alcohol_proof) && ( 
                     <div className="my-12 border-t-2 border-gray-100 pt-8">
-                        <h3 className="text-2xl font-serif font-bold mb-6 text-gray-900">Data & History</h3>
+                        <h3 className="text-2xl font-serif font-bold mb-6 text-gray-900">
+                            Data & History
+                        </h3>
                         <div className="grid md:grid-cols-2 gap-8">
                             {post.knowledgeMannersFields?.recipeIngredients && (
                                 <div>
-                                    <h4 className="font-bold text-red-700 mb-2">Standard Recipe</h4>
+                                    <h4 className="font-bold text-red-700 mb-2">
+                                        Standard Recipe
+                                    </h4>
                                     <div className="bg-red-50 p-4 rounded text-gray-700 whitespace-pre-wrap">
                                         {post.knowledgeMannersFields.recipeIngredients}
                                     </div>
@@ -161,14 +179,22 @@ export default async function PostPage({ params }: PostPageProps) {
                             <div>
                                 {post.knowledgeMannersFields?.alcohol_proof && (
                                     <div className="mb-4">
-                                        <h4 className="font-bold text-gray-700 mb-1">Strength</h4>
-                                        <p className="text-gray-600">{post.knowledgeMannersFields.alcohol_proof}</p>
+                                        <h4 className="font-bold text-gray-700 mb-1">
+                                            Strength
+                                        </h4>
+                                        <p className="text-gray-600">
+                                            {post.knowledgeMannersFields.alcohol_proof}
+                                        </p>
                                     </div>
                                 )}
                                 {post.knowledgeMannersFields?.originHistory && (
                                     <div>
-                                        <h4 className="font-bold text-gray-700 mb-1">History</h4>
-                                        <p className="text-gray-600 text-sm leading-relaxed">{post.knowledgeMannersFields.originHistory}</p>
+                                        <h4 className="font-bold text-gray-700 mb-1">
+                                            History
+                                        </h4>
+                                        <p className="text-gray-600 text-sm leading-relaxed">
+                                            {post.knowledgeMannersFields.originHistory}
+                                        </p>
                                     </div>
                                 )}
                             </div>
@@ -176,14 +202,18 @@ export default async function PostPage({ params }: PostPageProps) {
                     </div>
                 )}
 
-                {/* 💡 商品紹介セクション */}
-                {(post.revenueReviewFields?.product_1_name || post.revenueReviewFields?.product_2_name || post.revenueReviewFields?.product_3_name) && (
+                {/* 商品紹介 */}
+                {(post.revenueReviewFields?.product_1_name ||
+                  post.revenueReviewFields?.product_2_name ||
+                  post.revenueReviewFields?.product_3_name) && (
                     <div className="mt-16 pt-10 border-t border-gray-200">
-                        <p className="text-center text-sm font-bold text-red-700 mb-2">[PR] 当記事はアフィリエイトプログラムによる広告を含みます。</p>
+                        <p className="text-center text-sm font-bold text-red-700 mb-2">
+                            [PR] 当記事はアフィリエイトプログラムによる広告を含みます。
+                        </p>
                         <h2 className="text-3xl font-serif font-bold text-center mb-8">
                             Recommended Items
                         </h2>
-                        
+
                         <AffiliateItem 
                             index={1}
                             name={post.revenueReviewFields?.product_1_name}
@@ -215,10 +245,12 @@ export default async function PostPage({ params }: PostPageProps) {
                 )}
             </article>
 
-            {/* 💡 共通バナー */}
+            {/* 共通バナー */}
             {post.globalFields?.aff_banner_image?.node?.sourceUrl && (
                 <div className="mt-16 pt-10 border-t border-gray-100">
-                    <p className="text-center text-xs text-gray-400 mb-4">ADVERTISEMENT</p>
+                    <p className="text-center text-xs text-gray-400 mb-4">
+                        ADVERTISEMENT
+                    </p>
                     <a 
                         href={post.globalFields.aff_banner_url || '#'} 
                         target="_blank" 
@@ -234,7 +266,7 @@ export default async function PostPage({ params }: PostPageProps) {
                 </div>
             )}
 
-            {/* 💡 一覧へ戻るボタン */}
+            {/* 戻る */}
             <div className="mt-10 text-center">
                 <Link 
                     href="/blog" 

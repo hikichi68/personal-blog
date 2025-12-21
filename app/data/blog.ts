@@ -30,7 +30,6 @@ export interface RecentPost {
   };
 }
 
-// 投稿詳細用の型定義 (ACFを追加)
 export interface PostDetail {
   databaseId: number;
   slug: string;
@@ -56,23 +55,14 @@ export interface PostDetail {
     }[];
   };
 
-  
-  // ACFデータの追加 (WPGraphQLの構成により、トップレベルまたはacfフィールド下に入ります)
-  // ここでは一般的な構成として、トップレベルのフィールドとしてマージされるか、
-  // あるいは `acf` というオブジェクトにまとまるかを確認する必要があります。
-  // 今回のクエリではトップレベル（Post直下）に展開される想定で記述しつつ、
-  // クエリ側で `acf` フィールドグループとして取得する場合はここを修正します。
-  // ※ここではクエリに合わせてフラットに定義します。
-  
-  // 実際のデータ構造に合わせてマッピングするためのインターフェース
-  globalFields?: { // ACFのGraphQL Field Nameに合わせる
+  globalFields?: {
     aff_banner_url?: string;
     aff_banner_image?: {node: {sourceUrl: string;};} | null;
     card_excerpt?: string;
     experience_level?: string;
  };
  
- revenueReviewFields?: { // ACFのGraphQL Field Nameに合わせる
+ revenueReviewFields?: {
    product_1_name?: string;
    product_1_image?: { node: { sourceUrl: string } } | null;
    product_1_aff_link_url?: string;
@@ -95,7 +85,7 @@ export interface PostDetail {
    product_3_recommend_rating?: number;
  };
  
- knowledgeMannersFields?: { // ACFのGraphQL Field Nameに合わせる
+ knowledgeMannersFields?: {
    proOnePoint?: string;
    recipeIngredients?: string;
    originHistory?: string;
@@ -103,7 +93,6 @@ export interface PostDetail {
  };
 }
 
-// 投稿一覧の型定義
 export interface PostListItem {
   databaseId: number;
   slug: string;
@@ -139,7 +128,7 @@ export interface BlogCardItem {
   slug: string;
   date: string;
   authorName: string;
-  imageUrl: string; // 確実に文字列としてURLを持つ
+  imageUrl: string;
   categoryName: string | null;
 }
 
@@ -160,21 +149,18 @@ query GetAllPosts {
           name
         }
       }
-
       featuredImage {
         node {
           sourceUrl
           altText
         }
       }
-
       categories {
         nodes {
           name
           slug
         }
       }
-        
       globalFields {
         card_excerpt
         experience_level
@@ -184,11 +170,6 @@ query GetAllPosts {
 }
 `;
 
-// 💡 重要: ACFフィールドを取得するためにクエリを拡張
-// 注意: フィールド名はWPGraphQLの設定やプラグインのバージョンにより
-// camelCase (affBannerUrl) か snake_case (aff_banner_url) か異なります。
-// ここではJSONの "graphql_field_name" に基づき記述しますが、
-// エラーが出る場合は WordPress管理画面の GraphiQL IDE で正しいフィールド名を確認してください。
 const GET_POST_BY_SLUG_QUERY = `
 query GetPostBySlug($slug: ID!) {
   post(id: $slug, idType: SLUG) {
@@ -215,8 +196,6 @@ query GetPostBySlug($slug: ID!) {
         slug
       }
     }
-    
-    # --- ACF Global Fields ---
     globalFields {
       aff_banner_url
       aff_banner_image {
@@ -227,12 +206,7 @@ query GetPostBySlug($slug: ID!) {
       card_excerpt
       experience_level
     }
-    
-    
-    # --- ACF Revenue Fields ---
     revenueReviewFields {
-
-      # --- ACF Revenue Fields (Product 1) ---
       product_1_name
       product_1_image {
         node {
@@ -243,10 +217,8 @@ query GetPostBySlug($slug: ID!) {
       product_1_redirect_slug
       product_1_catch_copy
       product1RecommendRating
-      
-      # --- ACF Revenue Fields (Product 2) ---
       product_2_name
-          product_2_image {
+      product_2_image {
         node {
           sourceUrl
         }
@@ -255,8 +227,6 @@ query GetPostBySlug($slug: ID!) {
       product_2_redirect_slug
       product_2_catch_copy
       product_2_recommend_rating
-      
-      # --- ACF Revenue Fields (Product 3) ---
       product_3_name
       product_3_image {
         node {
@@ -268,8 +238,6 @@ query GetPostBySlug($slug: ID!) {
       product_3_catch_copy
       product_3_recommend_rating
     }
-
-    # --- ACF Knowledge Fields ---
     knowledgeMannersFields {
       proOnePoint
       alcohol_proof
@@ -333,21 +301,18 @@ query GetPostsByCategory($slug: String!) {
           name
         }
       }
-
       featuredImage {
         node {
           sourceUrl
           altText
         }
       }
-
       categories {
         nodes {
           name
           slug
         }
       }
-        
       globalFields {
         card_excerpt
         experience_level
@@ -362,13 +327,14 @@ query GetPostsByCategory($slug: String!) {
 // ===============================================
 
 async function fetchGraphQL<T>(query: string, variables = {}): Promise<T> {
+  // ✅ next.revalidate を 3600秒 (1時間) に統一
   const response = await fetch(GQL_ENDPOINT!, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
     body: JSON.stringify({ query, variables }),
-    next: { revalidate: 3600 },
+    next: { revalidate: 3600 }, 
   });
 
   if (!response.ok) {
@@ -466,13 +432,10 @@ export async function getAllBlogCards(): Promise<BlogCardItem[]> {
       GET_ALL_POSTS_QUERY
     );
     
-    // 💡 ここでデータを整形 (Galleryの成功例と同じアプローチ)
     return data.posts.nodes.map(post => {
-        // 画像URLの解決ロジック
         const imgNode = post.featuredImage?.node;
         const imageUrl = imgNode?.sourceUrl || 'https://placehold.co/600x400/png?text=No+Image';
         
-        // カテゴリ名の解決ロジック
         const categoryName = post.categories?.nodes && post.categories.nodes.length > 0
             ? post.categories.nodes[0].name
             : null;

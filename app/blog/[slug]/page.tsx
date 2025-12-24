@@ -207,7 +207,7 @@ export default async function PostPage({ params }: PostPageProps) {
                   post.revenueReviewFields?.product_2_name ||
                   post.revenueReviewFields?.product_3_name) && (
                     <div className="mt-16 pt-10 border-t border-gray-200">
-                        <p className="text-center text-sm font-bold text-red-700 mb-2">
+                        <p className="text-center text-sm font-bold text-gray-400 mb-2">
                             [PR] 当記事はアフィリエイトプログラムによる広告を含みます。
                         </p>
                         <h2 className="text-3xl font-serif font-bold text-center mb-8">

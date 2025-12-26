@@ -33,7 +33,7 @@ export const AffiliateItem: React.FC<AffiliateItemProps> = ({
       {/* 商品画像がある場合に表示 */}
       {imageUrl && (
         <div className="w-full h-64 overflow-hidden border-b border-gray-100">
-          <img src={imageUrl} alt={name} className="w-full h-full object-cover" />
+          <img src={imageUrl} alt={name} className="w-full h-48 object-contain bg-white rounded-t-lg p-2" />
         </div>
       )}
 

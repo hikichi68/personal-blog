@@ -66,13 +66,15 @@ export interface PostDetail {
    product_1_name?: string;
    product_1_image?: { node: { sourceUrl: string } } | null;
    product_1_aff_link_url?: string;
+   product_1_impression_tag?: string;
    product_1_redirect_slug?: string;
    product_1_catch_copy?: string;
-   product1RecommendRating?: number;
+   product_1_recommendRating?: number;
    
    product_2_name?: string;
    product_2_image?: { node: { sourceUrl: string } } | null;
    product_2_aff_link_url?: string;
+   product_2_impression_tag?: string;
    product_2_redirect_slug?: string;
    product_2_catch_copy?: string;
    product_2_recommend_rating?: number;
@@ -80,6 +82,7 @@ export interface PostDetail {
    product_3_name?: string;
    product_3_image?: { node: { sourceUrl: string } } | null;
    product_3_aff_link_url?: string;
+   product_3_impression_tag?: string;
    product_3_redirect_slug?: string;
    product_3_catch_copy?: string;
    product_3_recommend_rating?: number;
@@ -214,9 +217,10 @@ query GetPostBySlug($slug: ID!) {
         }
       }
       product_1_aff_link_url
+      product_1_impression_tag
       product_1_redirect_slug
       product_1_catch_copy
-      product1RecommendRating
+      product_1_recommendRating
       product_2_name
       product_2_image {
         node {
@@ -224,6 +228,7 @@ query GetPostBySlug($slug: ID!) {
         }
       }
       product_2_aff_link_url
+      product_2_impression_tag
       product_2_redirect_slug
       product_2_catch_copy
       product_2_recommend_rating
@@ -234,6 +239,7 @@ query GetPostBySlug($slug: ID!) {
         }
       }
       product_3_aff_link_url
+      product_3_impression_tag
       product_3_redirect_slug
       product_3_catch_copy
       product_3_recommend_rating

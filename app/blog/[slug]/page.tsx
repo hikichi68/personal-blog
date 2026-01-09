@@ -221,7 +221,8 @@ export default async function PostPage({ params }: PostPageProps) {
                             url={post.revenueReviewFields?.product_1_aff_link_url}
                             redirectSlug={post.revenueReviewFields?.product_1_redirect_slug}
                             catchCopy={post.revenueReviewFields?.product_1_catch_copy}
-                            rating={post.revenueReviewFields?.product1RecommendRating}
+                            rating={post.revenueReviewFields?.product_1_recommendRating}
+                            impressionTag={post.revenueReviewFields?.product_1_impression_tag}
                         />
                         <AffiliateItem 
                             index={2}
@@ -231,6 +232,7 @@ export default async function PostPage({ params }: PostPageProps) {
                             redirectSlug={post.revenueReviewFields?.product_2_redirect_slug}
                             catchCopy={post.revenueReviewFields?.product_2_catch_copy}
                             rating={post.revenueReviewFields?.product_2_recommend_rating}
+                            impressionTag={post.revenueReviewFields?.product_2_impression_tag}
                         />
                         <AffiliateItem 
                             index={3}
@@ -240,6 +242,7 @@ export default async function PostPage({ params }: PostPageProps) {
                             redirectSlug={post.revenueReviewFields?.product_3_redirect_slug}
                             catchCopy={post.revenueReviewFields?.product_3_catch_copy}
                             rating={post.revenueReviewFields?.product_3_recommend_rating}
+                            impressionTag={post.revenueReviewFields?.product_3_impression_tag}
                         />
                     </div>
                 )}

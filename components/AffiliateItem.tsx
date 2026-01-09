@@ -10,6 +10,7 @@ interface AffiliateItemProps {
   catchCopy?: string;
   rating?: number;
   index: number;
+  impressionTag?: string;
 }
 
 export const AffiliateItem: React.FC<AffiliateItemProps> = ({
@@ -20,6 +21,7 @@ export const AffiliateItem: React.FC<AffiliateItemProps> = ({
   catchCopy,
   rating = 0,
   index,
+  impressionTag,
 }) => {
   if (!name) return null;
 
@@ -67,6 +69,12 @@ export const AffiliateItem: React.FC<AffiliateItemProps> = ({
           </a>
         </div>
       </div>
+        {impressionTag && (
+          <div 
+            dangerouslySetInnerHTML={{ __html: impressionTag }} 
+            style={{ display: 'none' }} 
+          />
+        )}
     </div>
   );
 };

@@ -6,7 +6,7 @@ interface AffiliateItemProps {
   name?: string;
   url?: string;
   redirectSlug?: string;
-  imageUrl?: string;
+  imageUrl?: string | null;
   catchCopy?: string;
   rating?: number;
   index: number;

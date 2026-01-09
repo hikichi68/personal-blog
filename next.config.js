@@ -8,6 +8,14 @@ const nextConfig = {
           port: '',
           pathname: '/**',
         },
+        {
+          protocol: 'https',
+          hostname: 'm.media-amazon.com',
+        },
+        {
+          protocol: 'https',
+          hostname: 'thumbnail.image.rakuten.co.jp',
+        },
       ],
     },
   };

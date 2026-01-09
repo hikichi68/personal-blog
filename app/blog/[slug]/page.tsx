@@ -217,7 +217,7 @@ export default async function PostPage({ params }: PostPageProps) {
                         <AffiliateItem 
                             index={1}
                             name={post.revenueReviewFields?.product_1_name}
-                            imageUrl={post.revenueReviewFields?.product_1_image?.node?.sourceUrl}
+                            imageUrl={post.revenueReviewFields?.product_1_image}
                             url={post.revenueReviewFields?.product_1_aff_link_url}
                             redirectSlug={post.revenueReviewFields?.product_1_redirect_slug}
                             catchCopy={post.revenueReviewFields?.product_1_catch_copy}
@@ -227,7 +227,7 @@ export default async function PostPage({ params }: PostPageProps) {
                         <AffiliateItem 
                             index={2}
                             name={post.revenueReviewFields?.product_2_name}
-                            imageUrl={post.revenueReviewFields?.product_2_image?.node?.sourceUrl}
+                            imageUrl={post.revenueReviewFields?.product_2_image}
                             url={post.revenueReviewFields?.product_2_aff_link_url}
                             redirectSlug={post.revenueReviewFields?.product_2_redirect_slug}
                             catchCopy={post.revenueReviewFields?.product_2_catch_copy}
@@ -237,7 +237,7 @@ export default async function PostPage({ params }: PostPageProps) {
                         <AffiliateItem 
                             index={3}
                             name={post.revenueReviewFields?.product_3_name}
-                            imageUrl={post.revenueReviewFields?.product_3_image?.node?.sourceUrl}
+                            imageUrl={post.revenueReviewFields?.product_3_image}
                             url={post.revenueReviewFields?.product_3_aff_link_url}
                             redirectSlug={post.revenueReviewFields?.product_3_redirect_slug}
                             catchCopy={post.revenueReviewFields?.product_3_catch_copy}

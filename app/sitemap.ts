@@ -2,7 +2,7 @@ import { MetadataRoute } from 'next';
 import { getAllPosts } from '@/app/data/blog'; // 以前作った全記事取得関数を利用
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const baseUrl = 'https://blog.barhik.tokyo';
+  const baseUrl = 'https://barhik.tokyo';
 
   // 1. WordPressから全記事を取得
   const posts = await getAllPosts();

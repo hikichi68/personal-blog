@@ -7,6 +7,6 @@ export default function robots(): MetadataRoute.Robots {
       allow: '/',
       disallow: '/go/', // 💡 アフィリエイトリダイレクト用URLはクロール不要
     },
-    sitemap: 'https://blog.barhik.tokyo/sitemap.xml',
+    sitemap: 'https://barhik.tokyo/sitemap.xml',
   };
 }

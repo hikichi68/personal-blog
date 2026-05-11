@@ -34,7 +34,7 @@ export async function generateMetadata(
         ? post.excerpt.replace(/<[^>]+>/g, '').slice(0, 120) 
         : `${siteTitle}の記事: ${post.title}`;
 
-    const pageUrl = `https://blog.barhik.tokyo/blog/${slug}`;
+    const pageUrl = `https://barhik.tokyo/blog/${slug}`;
     const ogImage = post.featuredImage?.node.sourceUrl || '/default-ogp.jpg';
 
     return {
@@ -96,12 +96,12 @@ export default async function PostPage({ params }: PostPageProps) {
         "@context": "https://schema.org",
         "@type": "BlogPosting",
         "headline": post.title,
-        "image": post.featuredImage?.node.sourceUrl || 'https://blog.barhik.tokyo/default-ogp.jpg',
+        "image": post.featuredImage?.node.sourceUrl || 'https://barhik.tokyo/default-ogp.jpg',
         "datePublished": post.date,
         "author": [{
             "@type": "Person",
             "name": post.author.node.name,
-            "url": "https://blog.barhik.tokyo/profile"
+            "url": "https://barhik.tokyo/profile"
         }]
     };
 

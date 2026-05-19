@@ -244,7 +244,7 @@ query GetPostBySlug($slug: ID!) {
 
 const GET_ALL_POST_SLUGS_QUERY = `
 query GetAllPostSlugs {
-  posts(first: 100) {
+  posts(first: 1000) {
     nodes {
       slug
     }
@@ -283,7 +283,7 @@ query GetAllCategories {
 
 const GET_POSTS_BY_CATEGORY_QUERY = `
 query GetPostsByCategory($slug: String!) {
-  posts(first: 10, where: {categoryName: $slug}) {
+  posts(first: 1000, where: {categoryName: $slug}) {
     nodes {
       databaseId
       slug
@@ -453,7 +453,7 @@ export async function getAllBlogCards(): Promise<BlogCardItem[]> {
 export async function getAffiliateUrlBySlug(slug: string): Promise<string | null> {
   const query = `
     query GetAllAffiliateLinks {
-      posts(first: 100) {
+      posts(first: 1000) {
         nodes {
           revenueReviewFields {
             product_1_redirect_slug
